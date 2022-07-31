@@ -1,7 +1,4 @@
-# Use this import to process CSV files
-import csv
-
-# Get the time for tracking information
+# Get the time for tracking the amount of time passes between functions
 import time
 
 # Import nltk
@@ -12,9 +9,18 @@ from nltk import word_tokenize
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 
+# Use this import to process CSV files
+# The SQL database should override the usage of the CSV file
+import csv
 
-def main(filename, inputword):
+# Import the database
+import database.mysql_repository
 
+# Instantiate a MysqlRepository object to use for the queries
+repo = database.mysql_repository.MysqlRepository()
+
+
+def csvread(filename, csvinput):
     ###
     # This is for debugging. Find ways to reduce time
     ###
@@ -30,7 +36,7 @@ def main(filename, inputword):
     except IOError:
         print("Opening file error")
 
-    text = word_tokenize(inputword)
+    text = word_tokenize(csvinput)
     tagged = nltk.pos_tag(text)
 
     print("text tagged: ", tagged)
@@ -123,3 +129,79 @@ class CallForTime:
     def timeAtNow(thetime):
         now = time.time()
         print("completed function: ", round(now - thetime, 2), " seconds\n")
+
+
+# Function to check input against database
+def sqlcheck(inputwords):
+    ###
+    # This is for debugging. Find ways to reduce time
+    ###
+
+    # Start timer
+    start = time.time()
+    prefunction = time.time()
+
+    text = word_tokenize(inputwords)
+    tagged = nltk.pos_tag(text)
+
+    print("text tagged: ", tagged)
+
+    ###
+    CallForTime.timeAtNow(prefunction)
+    prefunction = time.time()
+    ###
+
+    for word in tagged:
+        sql = ("SELECT * "
+               "FROM wordhistory "
+               "WHERE wordtext = '{0}' AND NLTKTag = '{1}'"
+               .format(word[0], word[1])
+               )
+
+        result = query_db(sql)
+        if len(result) != 0:
+            print(result)
+        else:
+            print("invalid word")
+
+    ###
+    CallForTime.timeAtNow(prefunction)
+    ###
+
+
+###
+# DEBUGGER: Function to read from database
+###
+def sqlread():
+    sql = ("SELECT * "
+           "FROM wordhistory"
+           )
+    result = query_db(sql)
+    print("\nFirst word: ", result[0][0])
+
+
+# Function to write to database
+def sqlwrite(sqlinput):
+    print("\nInserting data: ")
+
+    insert_db(sqlinput)
+
+    sql = ("SELECT * "
+           "FROM wordhistory"
+           )
+    result = query_db(sql)
+    print("\ndb: ")
+    for line in result:
+        print(line)
+
+
+# Query database
+def query_db(sql):
+    repo.cursor.execute(sql)
+    return list(repo.cursor)
+
+
+# Write to database
+def insert_db(sql):
+    repo.cursor.execute(sql)
+    print("\nInserted into database")
