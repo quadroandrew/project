@@ -43,8 +43,6 @@ while True:
 
     for ind_word in text_tagged:
 
-        print(ind_word[0])
-
         # Lowercase all words except tags that are NNP, NNPS, or the word "I"
         if ("NNP" in ind_word[1]) or ("NNPS" in ind_word[1]) or ("I" in ind_word[0]):
             if debug:
