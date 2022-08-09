@@ -7,7 +7,6 @@ repo = database.mysql_repository.MysqlRepository()
 
 # Function to check input against database
 def sql_read(input_word, input_tag, debug_bool):
-
     sql = ("SELECT Etymological "
            "FROM wordhistory "
            "WHERE wordtext = '{0}' AND NLTKTag = '{1}'"
@@ -65,3 +64,9 @@ def insert_db(sql, debug_bool):
 
     if debug_bool:
         print("\nInserted into database")
+
+
+def print_db(sql):
+    repo.cursor.execute(sql)
+    return repo.cursor.fetchall()
+
