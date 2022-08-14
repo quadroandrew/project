@@ -1,13 +1,14 @@
 from flask import Flask, request, render_template
 from app.frontend import frontend
 
+
 # Set up debug boolean to pass on
 debug = True
 # debug = False
 
 
 def flask():
-    app = Flask(__name__, template_folder='htmlforms')
+    app = Flask(__name__, template_folder='app/htmlforms')
 
     @app.route('/')
     def starting_page():

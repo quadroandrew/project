@@ -1,10 +1,9 @@
 from dataclasses import dataclass
-from app.obfuscation.obf_word_class import word_class
+from abc import ABC
 
 
 @dataclass
-class WordInfo(word_class):
-
+class word_class(ABC):
     word: str
     tag: str
     ety: str

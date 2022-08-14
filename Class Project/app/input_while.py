@@ -1,5 +1,9 @@
 # Get the frontend
-from app import frontend
+from app.frontend import frontend
+
+debug = False
+
+front = frontend()
 
 # This is going to allow the user to consistently try inputs until exit
 while True:
@@ -18,4 +22,4 @@ while True:
         break
     ###
 
-    frontend.input_system(input_words)
+    front.input_system(input_words)

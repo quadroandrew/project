@@ -6,12 +6,14 @@ from app import sql_scripting
 # Instantiate a MysqlRepository object to use for the queries
 repo = database.mysql_repository.MysqlRepository()
 
+sql_class = sql_scripting.sql_system
+
 sql = ("SELECT * "
        "FROM wordhistory"
        )
 
 print("Print the database")
-result = sql_scripting.print_db(sql)
+result = sql_class.print_db(sql_class, sql)
 
 for line in result:
     print(line)
@@ -24,8 +26,6 @@ sql_insert = ("INSERT INTO wordhistory "
               "; "
               )
 
-sql_scripting.sql_write(sql_insert, False)
-
 print("\nRemoving line")
 input_word = 'I'
 input_tag = 'DET'
@@ -34,7 +34,9 @@ sql_remove = ("DELETE FROM wordhistory "
               .format(input_word, input_tag)
               )
 
-result = sql_scripting.print_db(sql)
+sql_class.print_db(sql_class, sql_remove)
+
+result = sql_class.print_db(sql_class, sql)
 
 for line in result:
     print(line)

@@ -16,3 +16,6 @@ class MysqlRepository:
 
     def __del__(self):
         self.connection.close()
+
+    def commit_changes(self):
+        self.connection.commit()
